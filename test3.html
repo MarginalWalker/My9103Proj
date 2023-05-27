@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Particle Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var mouse = {
+            x: undefined,
+            y: undefined
+        };
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        var repulsionForce = 1; // 控制排斥力大小
+
+        function Particle(x, y, radius, color, velocity) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.color = color;
+            this.velocity = velocity;
+
+            this.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            };
+
+            this.update = function() {
+                this.draw();
+
+                if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+                    this.velocity.x = -this.velocity.x;
+                }
+
+                if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+                    this.velocity.y = -this.velocity.y;
+                }
+
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+
+                // Particle collision
+                for (var i = 0; i < particles.length; i++) {
+                    if (this === particles[i]) continue;
+
+                    var dx = this.x - particles[i].x;
+                    var dy = this.y - particles[i].y;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < this.radius + particles[i].radius) {
+                        // Collision detected
+                        var angle = Math.atan2(dy, dx);
+                        var sin = Math.sin(angle);
+                        var cos = Math.cos(angle);
+
+                        // Swap velocities
+                        var velocity1 = {
+                            x: this.velocity.x * cos - this.velocity.y * sin,
+                            y: this.velocity.x * sin + this.velocity.y * cos
+                        };
+
+                        var velocity2 = {
+                            x: particles[i].velocity.x * cos - particles[i].velocity.y * sin,
+                            y: particles[i].velocity.x * sin + particles[i].velocity.y * cos
+                        };
+
+                        // Update velocities
+                        this.velocity.x = velocity2.x;
+                        this.velocity.y = velocity2.y;
+
+                        particles[i].velocity.x = velocity1.x;
+                        particles[i].velocity.y = velocity1.y;
+
+                        // Update colors
+                        this.color = getRandomColor();
+                        particles[i].color = getRandomColor();
+                    }
+                }
+
+                // Mouse proximity
+                if (mouse.x && mouse.y) {
+                    var dx = mouse.x - this.x;
+                    var dy = mouse.y - this.y;
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        var forceMagnitude = repulsionForce / distance;
+                        this.velocity.x = -dx * forceMagnitude;
+                        this.velocity.y = -dy * forceMagnitude;
+                    }
+                }
+            };
+        }
+
+        function init() {
+            particles = [];
+
+            for (var i = 0; i < 100; i++) {
+                var radius = Math.random() * 5 + 1;
+                var x = Math.random() * (canvas.width - radius * 2) + radius;
+                var y = Math.random() * (canvas.height - radius * 2) + radius;
+                var color = getRandomColor();
+                var velocity = {
+                    x: (Math.random() - 0.5) * 2,
+                    y: (Math.random() - 0.5) * 2
+                };
+
+                particles.push(new Particle(x, y, radius, color, velocity));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 0; i < particles.length; i++) {
+                particles[i].update();
+            }
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener('mouseout', function() {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+    </script>
+</body>
+</html>
