@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #111111;
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#startPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #222222;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    z-index: 9999;
+}
+
+#startPage h1 {
+    font-size: 40px;
+    margin-bottom:30px;
+}
+
+#startPage p {
+    font-size: 15px;
+    margin-bottom: 30px;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+#startPage button {
+    padding: 15px 35px;
+    font-size: 24px;
+    text-align: center;
+    background-color: #ff8c00;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 9px #777;
+}
+
+#startPage button:hover {
+    background-color: rgb(226, 98, 0);
+}
+#startPage button:active {
+    background-color: rgb(142, 62, 0);
+  box-shadow: 0 5px #555;
+  transform: translateY(4px);
+}
+
+#music {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    font-size: 24px;
+    text-align: center;
+    background-color: #636363;
+    color: #ffffff;
+    border: solid;
+    border-color: #ffffff;
+}
+
+#music:hover {
+    background-color: rgb(41, 41, 41);
+    border-color: #c0c0c0;
+}
+
+#music:active {
+    background-color: rgb(0, 0, 0);
+    border-color: #777777;
+}
