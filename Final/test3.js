@@ -31,7 +31,7 @@ myCanvas.height = window.innerHeight;
 
 
 //construct particles
-function glowingParticle(x, y, radius, color) {
+function GlowingParticle(x, y, radius, color) {
     this.x = x;
     this.y = y;
     this.speed = 0.01;
@@ -151,7 +151,7 @@ function initFunction() {
         let y = Math.random() * (myCanvas.height - radius * 2) + radius;
         let color = colors[Math.floor(Math.random() * colors.length)];
 
-        glowingParticles.push(new glowingParticle(x, y, radius, color));
+        glowingParticles.push(new GlowingParticle(x, y, radius, color));
     }
 }
 
