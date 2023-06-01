@@ -31,113 +31,112 @@ myCanvas.height = window.innerHeight;
 
 
 //construct particles
-function GlowingParticle(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.speed = 0.01;
-    this.radius = radius;
-    this.color = color;
-    this.velocity = {
-        x: (Math.random() - 0.5),
-        y: (Math.random() - 0.5)
-    };
-    
-    
-    this.draw = function () {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        ctx.fillStyle = this.color;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.closePath();
-    };
+class GlowingParticle {
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.speed = 0.01;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = {
+            x: (Math.random() - 0.5),
+            y: (Math.random() - 0.5)
+        };
 
 
-    
-    this.update = function () {
-        this.draw();
+        this.draw = function () {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = this.color;
+            ctx.shadowColor = this.color;
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.closePath();
+        };
 
-        // Calculate the scaling factor based on the current canvas size
-        let scalingData = Math.min(myCanvas.width / 800, myCanvas.height / 600);
 
-        for (let i = 0; i < glowingParticles.length; i++) {
-            if (this === glowingParticles[i]) continue;
-            let dx = this.x - glowingParticles[i].x;
-            let dy = this.y - glowingParticles[i].y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
 
-            // Adjust the distance threshold based on the scaling factor
-            let getProperDistance = 80 * scalingData;
+        this.update = function () {
+            this.draw();
 
-            //draw the line between the parstsl
-            if (distance < getProperDistance) {
-                ctx.beginPath();
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 0.2;
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(glowingParticles[i].x, glowingparticles[i].y);
-                ctx.stroke();
-                ctx.closePath();
+            // Calculate the scaling factor based on the current canvas size
+            let scalingData = Math.min(myCanvas.width / 800, myCanvas.height / 600);
+
+            for (let i = 0; i < glowingParticles.length; i++) {
+                if (this === glowingParticles[i])
+                    continue;
+                let dx = this.x - glowingParticles[i].x;
+                let dy = this.y - glowingParticles[i].y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Adjust the distance threshold based on the scaling factor
+                let getProperDistance = 80 * scalingData;
+
+                //draw the line between the parstsl
+                if (distance < getProperDistance) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 0.2;
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(glowingParticles[i].x, glowingparticles[i].y);
+                    ctx.stroke();
+                    ctx.closePath();
+                }
             }
-        }
-        
-        // No glowingParticles running off the screen
-        if (this.x + this.radius > myCanvas.width || this.x - this.radius < 0) {
-            this.velocity.x = -this.velocity.x;
-        }
 
-        if (this.y + this.radius > myCanvas.height || this.y - this.radius < 0) {
-            this.velocity.y = -this.velocity.y;
-        }
-
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
-
-    
-
-        
-        // Attraction towards mouse cursor
-        // if (mouse.x && mouse.y) {
-        //     let dx = mouse.x - this.x;
-        //     let dy = mouse.y - this.y;
-        //     let distance = Math.sqrt(dx * dx + dy * dy);
-    
-        //     if (distance < 200) {
-        //         this.velocity.x += (dx / distance) * this.speed;
-        //         this.velocity.y += (dy / distance) * this.speed;
-        //     }
-        // }
-
-        // make the star bigger
-        if (
-            mouse.x - this.x < 50 &&
-            mouse.x - this.x > -50 &&
-            mouse.y - this.y < 50 &&
-            mouse.y - this.y > -50
-        ) {
-            if (this.radius < 40) {
-                this.radius += 2;
+            // No glowingParticles running off the screen
+            if (this.x + this.radius > myCanvas.width || this.x - this.radius < 0) {
+                this.velocity.x = -this.velocity.x;
             }
-        } else if (this.radius > 2) {
-            this.radius -= 2;
-        }
 
-        // Attraction towards fixed circles
-        for (let i = 0; i < lightPoints.length; i++) {
-            let dx = lightPoints[i].x - this.x;
-            let dy = lightPoints[i].y - this.y;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < 200) {
-                this.velocity.x += (dx / distance) * this.speed;
-                this.velocity.y += (dy / distance) * this.speed;
+            if (this.y + this.radius > myCanvas.height || this.y - this.radius < 0) {
+                this.velocity.y = -this.velocity.y;
             }
-        }
-            
-            
-        
-    };
+
+            this.x += this.velocity.x;
+            this.y += this.velocity.y;
+
+
+
+
+            // Attraction towards mouse cursor
+            // if (mouse.x && mouse.y) {
+            //     let dx = mouse.x - this.x;
+            //     let dy = mouse.y - this.y;
+            //     let distance = Math.sqrt(dx * dx + dy * dy);
+            //     if (distance < 200) {
+            //         this.velocity.x += (dx / distance) * this.speed;
+            //         this.velocity.y += (dy / distance) * this.speed;
+            //     }
+            // }
+            // make the star bigger
+            if (mouse.x - this.x < 50 &&
+                mouse.x - this.x > -50 &&
+                mouse.y - this.y < 50 &&
+                mouse.y - this.y > -50) {
+                if (this.radius < 40) {
+                    this.radius += 2;
+                }
+            } else if (this.radius > 2) {
+                this.radius -= 2;
+            }
+
+            // Attraction towards fixed circles
+            for (let i = 0; i < lightPoints.length; i++) {
+                let dx = lightPoints[i].x - this.x;
+                let dy = lightPoints[i].y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 200) {
+                    this.velocity.x += (dx / distance) * this.speed;
+                    this.velocity.y += (dy / distance) * this.speed;
+                }
+            }
+
+
+
+        };
+    }
 }
 
 
