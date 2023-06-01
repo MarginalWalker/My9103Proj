@@ -30,20 +30,22 @@ myCanvas.width = window.innerWidth;
 myCanvas.height = window.innerHeight;
 
 
-//construct particles
-function glowingParticle(x, y, radius, color) {
-    this.x = x;
-    this.y = y;
-    this.speed = 0.01;
-    this.radius = radius;
-    this.color = color;
-    this.velocity = {
-        x: (Math.random() - 0.5),
-        y: (Math.random() - 0.5)
-    };
-    
-    
-    this.draw = function () {
+//construct particles class
+class glowingParticle {
+    constructor(x, y, radius, color) {
+        this.x = x;
+        this.y = y;
+        this.speed = 0.01;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = {
+            x: (Math.random() - 0.5),
+            y: (Math.random() - 0.5)
+        };
+    }
+
+
+    draw () {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
         ctx.fillStyle = this.color;
@@ -51,18 +53,19 @@ function glowingParticle(x, y, radius, color) {
         ctx.shadowBlur = 10;
         ctx.fill();
         ctx.closePath();
-    };
+    }
 
 
-    
-    this.update = function () {
+
+    update () {
         this.draw();
 
         // Calculate the scaling factor based on the current canvas size
         let scalingData = Math.min(myCanvas.width / 800, myCanvas.height / 600);
 
         for (let i = 0; i < glowingParticles.length; i++) {
-            if (this === glowingParticles[i]) continue;
+            if (this === glowingParticles[i])
+                continue;
             let dx = this.x - glowingParticles[i].x;
             let dy = this.y - glowingParticles[i].y;
             let distance = Math.sqrt(dx * dx + dy * dy);
@@ -76,12 +79,12 @@ function glowingParticle(x, y, radius, color) {
                 ctx.strokeStyle = this.color;
                 ctx.lineWidth = 0.2;
                 ctx.moveTo(this.x, this.y);
-                ctx.lineTo(glowingParticles[i].x, glowingparticles[i].y);
+                ctx.lineTo(glowingParticles[i].x, glowingParticles[i].y);
                 ctx.stroke();
                 ctx.closePath();
             }
         }
-        
+
         // No glowingParticles running off the screen
         if (this.x + this.radius > myCanvas.width || this.x - this.radius < 0) {
             this.velocity.x = -this.velocity.x;
@@ -94,28 +97,24 @@ function glowingParticle(x, y, radius, color) {
         this.x += this.velocity.x;
         this.y += this.velocity.y;
 
-    
 
-        
+
+
         // Attraction towards mouse cursor
         // if (mouse.x && mouse.y) {
         //     let dx = mouse.x - this.x;
         //     let dy = mouse.y - this.y;
         //     let distance = Math.sqrt(dx * dx + dy * dy);
-    
         //     if (distance < 200) {
         //         this.velocity.x += (dx / distance) * this.speed;
         //         this.velocity.y += (dy / distance) * this.speed;
         //     }
         // }
-
         // make the star bigger
-        if (
-            mouse.x - this.x < 50 &&
+        if (mouse.x - this.x < 50 &&
             mouse.x - this.x > -50 &&
             mouse.y - this.y < 50 &&
-            mouse.y - this.y > -50
-        ) {
+            mouse.y - this.y > -50) {
             if (this.radius < 40) {
                 this.radius += 2;
             }
@@ -134,10 +133,11 @@ function glowingParticle(x, y, radius, color) {
                 this.velocity.y += (dy / distance) * this.speed;
             }
         }
-            
-            
-        
+
+
+
     };
+    
 }
 
 
