@@ -61,7 +61,7 @@ class glowingParticle {
         this.draw();
 
         // Calculate the scaling factor based on the current canvas size
-        let scalingData = Math.min(myCanvas.width / 800, myCanvas.height / 600);
+        let scalingFacter = Math.min(myCanvas.width / 800, myCanvas.height / 600);
 
         for (let i = 0; i < glowingParticles.length; i++) {
             if (this === glowingParticles[i])
@@ -71,10 +71,10 @@ class glowingParticle {
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             // Adjust the distance threshold based on the scaling factor
-            let getProperDistance = 80 * scalingData;
+            let maxDistance = 80 * scalingFacter;
 
             //draw the line between the parstsl
-            if (distance < getProperDistance) {
+            if (distance < maxDistance) {
                 ctx.beginPath();
                 ctx.strokeStyle = this.color;
                 ctx.lineWidth = 0.2;
